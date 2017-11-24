@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import re
 import argparse
@@ -55,6 +56,10 @@ def main():
                 # e.g., "^((\s\s)+)" if indentation == "\s\s"
                 ind_comp_pattern = re.compile("^((" + indentation + ")+)")
             for line in infile:
+                # replace a few common non-ascii characters
+                line = str.replace(line, "’", "'")
+                line = str.replace(line, "“", "\"")
+                line = str.replace(line, "“", "\"")
                 chunk = re.match(r'(.*\s)(\d+)', line)
                 if not chunk:
                     parser.error(
