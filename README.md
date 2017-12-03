@@ -7,9 +7,9 @@ Command line interface for generating [`pdftk`-style](https://www.pdflabs.com/bl
 - [Why](#why)
 - [Sample Usage](#sample-usage)
 - [TOC Format](#toc-format)
-  - [Specifying structure by subheading numbering](#specifying-structure-by-subheading-numbering)
-  - [Specifying structure by indentation](#specifying-structure-by-indentation)
-  - [Keeping PDF flat](#keeping-pdf-flat)
+    - [Specifying structure by subheading numbering](#specifying-structure-by-subheading-numbering)
+    - [Specifying structure by indentation](#specifying-structure-by-indentation)
+    - [Keeping PDF flat](#keeping-pdf-flat)
 - [Additional Options](#additional-options)
 - [Dependency](#dependency)
 
@@ -42,7 +42,7 @@ or perhaps better, this:
 
 #### With PDF I/O:
 
-    python pdfoutliner.py TOC --input-pdf in.pdf -s START
+    python pdfoutliner.py TOC --inpdf in.pdf -s START
 
 where 
 
