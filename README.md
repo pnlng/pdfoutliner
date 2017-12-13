@@ -7,9 +7,9 @@ Command line interface for generating [`pdftk`-style](https://www.pdflabs.com/bl
 - [Why](#why)
 - [Sample Usage](#sample-usage)
 - [TOC Format](#toc-format)
-    - [Specifying structure by subheading numbering](#specifying-structure-by-subheading-numbering)
-    - [Specifying structure by indentation](#specifying-structure-by-indentation)
-    - [Keeping PDF flat](#keeping-pdf-flat)
+  - [Specifying structure by subheading numbering](#specifying-structure-by-subheading-numbering)
+  - [Specifying structure by indentation](#specifying-structure-by-indentation)
+  - [Keeping PDF flat](#keeping-pdf-flat)
 - [Additional Options](#additional-options)
 - [Dependency](#dependency)
 
@@ -105,7 +105,7 @@ where the unit of indentation is 2 spaces, then use
 And the script will infer the structure from the subheading indentations. 
 
 ### Keeping PDF flat
-Use `-k --keep-flat` and the script will ignore any numbering or indentations. The output PDF will have a flat, unstructured outline. 
+Use `-k --keepflat` and the script will ignore any numbering or indentations. The output PDF will have a flat, unstructured outline. 
 
     Heading 1
     Subheading 3
@@ -131,7 +131,7 @@ Use `-k --keep-flat` and the script will ignore any numbering or indentations. T
 
       -d INDENTATION, --indentation INDENTATION
                             escaped regex for 1 unit of indentation
-      -k, --keep-flat       keep outline flat
+      -k, --keepflat       keep outline flat
       --style {1.2,1.2.}    heading style. with or without a trailing dot. default
                             "1.2", i.e., no trailing dot
 
