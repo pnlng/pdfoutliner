@@ -16,7 +16,7 @@ def main():
         "if both -d and -k are specified, -d will take precedence over -k")
     group_structure.add_argument("-d", "--indentation", 
         help="escaped regex for 1 unit of indentation", type=str)
-    group_structure.add_argument("-k", "--keep-flat", 
+    group_structure.add_argument("-k", "--keepflat", 
         help="keep outline flat", 
         action="store_true")
     group_structure.add_argument("--style",
@@ -77,10 +77,10 @@ def main():
                         level = len(re.findall(ind_unit_pattern, indented)) + 1
                     # strip title of indentation
                     title = re.sub(ind_comp_pattern, "", title)
-                elif args.keep-flat: 
+                elif args.keepflat: 
                     level = 1
                     if not args.inpdf:
-                        parser.error("-k --keep-flat is to be used with --inpdf")
+                        parser.error("-k --keepflat is to be used with --inpdf")
                 else:
                     # infer structure from numbering by counting the number of 
                     # dots. e.g., "1.2.3 Chapter Title" is level 3 
