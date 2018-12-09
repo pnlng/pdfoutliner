@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name="pdfoutliner",
-      version="0.0.2",
+      version="0.0.3",
       author="GHPen",
       description="Command line interface for generating pdftk-style bookmark files in a user-friendly way, and (optionally) outputs a PDF file with the specified outline.",
       long_description=long_description,

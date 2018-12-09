@@ -53,20 +53,24 @@ def main():
                 # the pattern for 1 unit of indentation
                 ind_unit_pattern = re.compile(indentation)
                 # the composite pattern
-                # e.g., "^((\s\s)+)" if indentation == "\s\s"
+                # e.g., "^((\\s\\s)+)" if indentation == "\\s\\s"
                 ind_comp_pattern = re.compile("^((" + indentation + ")+)")
             for line in infile:
                 # replace a few common non-ascii characters
                 line = str.replace(line, "’", "'")
                 line = str.replace(line, "“", "\"")
                 line = str.replace(line, "“", "\"")
-                chunk = re.match(r'(.*\s)(\d+)', line)
+                chunk = re.match(r'(.*\s)(-*\d+)', line)
                 if not chunk:
                     parser.error(
                         "incorrect formatting on line {}: \n {}".format(
                             str(line_num), line))
                 title = chunk.group(1)
                 page = int(chunk.group(2)) + start
+                if page < 1:
+                    parser.error(
+                        "page number out of range on line {} \n {}".format(
+                        str(line_num), line))
                 # infer structure from indentation
                 if args.indentation:
                     indented = re.search(ind_comp_pattern, title)
