@@ -1,17 +1,22 @@
 # pdfoutliner
-Command line interface for generating [`pdftk`-style](https://www.pdflabs.com/blog/export-and-import-pdf-bookmarks/) bookmark files in a user-friendly way, and (optionally) outputs a PDF file with the specified outline. 
+Command line tool for generating [`pdftk`-style](https://www.pdflabs.com/blog/export-and-import-pdf-bookmarks/) bookmark files in a user-friendly way, and (optionally) outputs a PDF file with the specified outline. 
 
 ## Table of Contents
 <!-- MarkdownTOC -->
 
-- [Why](#why)
-- [Sample Usage](#sample-usage)
-- [TOC Format](#toc-format)
-  - [Specifying structure by subheading numbering](#specifying-structure-by-subheading-numbering)
-  - [Specifying structure by indentation](#specifying-structure-by-indentation)
-  - [Keeping PDF flat](#keeping-pdf-flat)
-- [Additional Options](#additional-options)
-- [Dependency](#dependency)
+- [pdfoutliner](#pdfoutliner)
+  - [Table of Contents](#table-of-contents)
+  - [Why](#why)
+  - [Installation](#installation)
+  - [Sample Usage](#sample-usage)
+      - [With PDF I/O:](#with-pdf-io)
+      - [Writing a pdftk bookmark file only:](#writing-a-pdftk-bookmark-file-only)
+  - [TOC Format](#toc-format)
+    - [Specifying structure by subheading numbering](#specifying-structure-by-subheading-numbering)
+    - [Specifying structure by indentation](#specifying-structure-by-indentation)
+    - [Keeping PDF flat](#keeping-pdf-flat)
+  - [Additional Options](#additional-options)
+  - [Dependency](#dependency)
 
 <!-- /MarkdownTOC -->
 
@@ -37,12 +42,15 @@ or perhaps better, this:
     1 PDF Reference (Version 1.5) 1
     1.1 Contents 3
 
+## Installation
+
+    pip3 install pdfoutliner
 
 ## Sample Usage
 
 #### With PDF I/O:
 
-    python pdfoutliner.py TOC --inpdf in.pdf -s START
+    pdfoutliner TOC --inpdf in.pdf -s START
 
 where 
 
@@ -53,11 +61,11 @@ See section [TOC Format](#toc-format) for details on the syntax.
 
 #### Writing a pdftk bookmark file only:
 
-    python pdfoutliner.py TOC
+    pdfoutliner TOC
 
 For more options, see section [Additional Options](#additional-options), or use
 
-    python pdfoutliner.py -h
+    pdfoutliner -h
 
 ## TOC Format
 The default table of contents format is
@@ -100,7 +108,7 @@ For example, suppose my TOC looks like
 
 where the unit of indentation is 2 spaces, then use
     
-    python pdfoutliner.py TOC -d \\s\\s
+    pdfoutliner TOC -d \\s\\s
 
 And the script will infer the structure from the subheading indentations. 
 
@@ -112,7 +120,7 @@ Use `-k --keepflat` and the script will ignore any numbering or indentations. Th
     Subsubheading 5
 
 ## Additional Options
-    usage: pdfoutliner.py [-h] [-o OUTMARKS] [-d INDENTATION] [-k]
+    usage: pdfoutliner [-h] [-o OUTMARKS] [-d INDENTATION] [-k]
                           [--style {1.2,1.2.}] [--outpdf OUTPDF] [--inpdf INPDF]
                           [-s START]
                           toc
