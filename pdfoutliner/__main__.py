@@ -31,6 +31,8 @@ def main():
     group_pdf.add_argument("-s", "--start", default=1,
         help="page in the pdf document where page 1 is. default 1", 
         type=int)
+    group_pdf.add_argument("--utf8", action='store_true',
+        help="TOC is encoded as UTF-8. default=false", default=False)
 
     args = parser.parse_args()
     start = args.start - 1
@@ -141,8 +143,14 @@ def main():
                 pdf_out_path = os.path.join(dir_path, pdf_out_name)
             else:
                 pdf_out_path = pdf_out_name
-        os.system("pdftk {} update_info {} output {}".format(args.inpdf, 
-            marks_path, pdf_out_path))
+        # update_info hasn't been previously defined
+        if args.utf8:
+            update_info = "update_info_utf8"
+        else:
+            update_info = "update_info"
+
+        os.system("pdftk {} {} {} output {}".format(args.inpdf, 
+            update_info, marks_path, pdf_out_path))
         # delete intermediary bookmark file
         os.remove(marks_path)
 
