@@ -22,17 +22,17 @@ def main():
     group_structure.add_argument("--style",
         choices=["1.2", "1.2."], default="1.2",
         help="heading style. with or without a trailing dot. "+
-        "default \"1.2\", i.e., no trailing dot", type=str)
+        "default: \"1.2\", i.e., no trailing dot", type=str)
     # PDF I/O
     group_pdf = parser.add_argument_group("PDF I/O")
     group_pdf.add_argument("--outpdf", help="path to output PDF file. " +
         "default is input pdf name + \"_outlined.pdf\" in input PDF's directory", type=str)
     group_pdf.add_argument("--inpdf", help="path to input PDF file", type=str)
     group_pdf.add_argument("-s", "--start", default=1,
-        help="page in the pdf document where page 1 is. default 1", 
+        help="page in the pdf document where page 1 is. default: 1", 
         type=int)
     group_pdf.add_argument("--utf8", action='store_true',
-        help="non-ASCII characters in TOC are encoded in UTF-8 instead of XML entities. default true", default=True)
+        help="non-ASCII characters in TOC are encoded in UTF-8 instead of XML entities. default: True", default=True)
 
     args = parser.parse_args()
     start = args.start - 1
@@ -143,7 +143,6 @@ def main():
                 pdf_out_path = os.path.join(dir_path, pdf_out_name)
             else:
                 pdf_out_path = pdf_out_name
-        # `update_info` hasn't been previously defined
         if args.utf8:
             update_info = "update_info_utf8"
         else:
