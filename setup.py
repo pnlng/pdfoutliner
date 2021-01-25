@@ -21,4 +21,5 @@ setup(name="pdfoutliner",
               "pdfoutliner = pdfoutliner.__main__:main"
           ]
       },
+        python_requires='>=3.5'
       )
