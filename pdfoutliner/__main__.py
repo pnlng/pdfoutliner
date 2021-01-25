@@ -17,8 +17,8 @@ def main():
     group_structure.add_argument("-d", "--indentation", 
         help="escaped regex for 1 unit of indentation", type=str)
     group_structure.add_argument("-k", "--keepflat", 
-        help="keep outline flat", 
-        action="store_true")
+        action="store_true",
+        help="keep outline flat")
     group_structure.add_argument("--style",
         choices=["1.2", "1.2."], default="1.2",
         help="heading style. with or without a trailing dot. "+
@@ -32,7 +32,7 @@ def main():
         help="page in the pdf document where page 1 is. default 1", 
         type=int)
     group_pdf.add_argument("--utf8", action='store_true',
-        help="TOC is encoded as UTF-8. default=false", default=False)
+        help="non-ASCII characters in TOC are encoded in UTF-8 instead of XML entities. default true", default=True)
 
     args = parser.parse_args()
     start = args.start - 1
