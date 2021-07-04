@@ -15,7 +15,7 @@ def main():
     group_structure = parser.add_argument_group("bookmark structure",
         "if both -d and -k are specified, -d will take precedence over -k")
     group_structure.add_argument("-d", "--indentation", 
-        help="escaped regex for 1 unit of indentation", type=str)
+        help="escaped regex for 1 unit of indentation. please include \"\\\s\" and \"\\\\t\" only. no symbols like \"+\", \"{2}\", etc. default: \\s\\s (2 spaces)", default="\\s\\s", type=str)
     group_structure.add_argument("-k", "--keepflat", 
         action="store_true",
         help="keep outline flat")
@@ -31,8 +31,8 @@ def main():
     group_pdf.add_argument("-s", "--start", default=1,
         help="page in the pdf document where page 1 is. default: 1", 
         type=int)
-    group_pdf.add_argument("--utf8", action='store_true',
-        help="non-ASCII characters in TOC are encoded in UTF-8 instead of XML entities. default: True", default=True)
+    group_pdf.add_argument("--xml", action='store_true',
+        help="use XML entities for non-ASCII characters instead of UTF-8 encoding", default=False)
 
     args = parser.parse_args()
     start = args.start - 1
@@ -47,16 +47,30 @@ def main():
         marks_path = os.path.join(toc_dir, marks_name)
     else:
         marks_path = marks_name
+    if args.indentation:
+        indentation = args.indentation
+        if not re.match(r'^(\\s|\\t)+$', indentation):
+            parser.error(f"please use \"\\\s\", \"\\\\t\", and no other symbols in the indentation pattern \"{indentation}\"")
+        # The pattern for 1 unit of indentation
+        ind_unit_pattern = re.compile(indentation)
+        # The composite pattern,
+        # e.g., "^((\\s\\s)+)" if indentation == "\\s\\s"
+        ind_comp_pattern = re.compile("^((" + indentation + ")+)")
+
+    if args.style == "1.2":
+        heading_style_regex = r'^\s*(\w|\.)*\w+\s'
+        heading_level_offset = 1
+    else: # 1.2.
+        heading_style_regex = r'^\s*(\w|\.)+\.\s'
+        heading_level_offset = 2
+    heading_style_pattern = re.compile(heading_style_regex)
+    # Level of depth is inferred from the number of dots before the first space
+    # The number of dots to ignore differ depending on the heading style
+    dot_pattern = re.compile(r'\.')
+
     with open(args.toc, "r") as infile:
         with open(marks_path, "w") as outfile:
             line_num = 1
-            if args.indentation:
-                indentation = args.indentation
-                # The pattern for 1 unit of indentation
-                ind_unit_pattern = re.compile(indentation)
-                # The composite pattern,
-                # e.g., "^((\\s\\s)+)" if indentation == "\\s\\s"
-                ind_comp_pattern = re.compile("^((" + indentation + ")+)")
             for line in infile:
                 # Replace a few common non-ascii characters
                 line = str.replace(line, "’", "'")
@@ -73,43 +87,35 @@ def main():
                     parser.error(
                         "page number out of range on line {} \n {}".format(
                         str(line_num), line))
+                if args.keepflat: 
+                    level = 1
                 # Infer structure from indentation
-                if args.indentation:
+                else:
                     indented = re.search(ind_comp_pattern, title)
                     if not indented:
+                        heading_match = re.search(heading_style_pattern, line)
+                        # TODO figure out how to mix and match heading and indentation...
                         level = 1
                     else:
                         indented = indented.group(1)
                         level = len(re.findall(ind_unit_pattern, indented)) + 1
                     # Strip title of indentation
                     title = re.sub(ind_comp_pattern, "", title)
-                elif args.keepflat: 
-                    level = 1
-                    if not args.inpdf:
-                        parser.error("-k --keepflat is to be used with --inpdf")
-                else:
+                    # TODO
                     # Infer structure from numbering by counting the number of 
                     # dots. e.g., "1.2.3 Chapter Title" is level 3 
                     #
                     # Take everything before the first space. Accomodates 
                     # appendices numberings like A.1.2
 
-                    # Integrity check
-                    e_temp = "subheading not in the style of \"{}\" on line {}: \n {}"
-                    e_msg = e_temp.format(args.style, line_num, line)
-                    if args.style == "1.2":
-                        if not re.search(r'^\s*(\w|\.)*\w+\s', line):
-                            parser.error(e_msg)
-                    if args.style == "1.2.":
-                        if not re.search(r'^\s*(\w|\.)+\.\s', line):
-                            parser.error(e_msg)
-                    indented_search = re.search(r'^(.*)\s?', line)
-                    level_offset = 2 - len(re.findall(r'\.', args.style))
-                    if indented_search:
-                        indented = indented_search.group(1)
-                        level = len(re.findall(r'\.', indented)) + level_offset
-                    else:
-                        level = 1
+
+                    if not heading_match:
+                        parser.error(
+                            f"subheading not in the style of \"{args.style}\" on line {line_num}: \n {line}")
+
+                    # Allow using both indentation and heading
+                    #                     
+                    level = len(re.findall(dot_pattern, title)) - heading_level_offset + 1
                 outfile.writelines(["BookmarkBegin\n",
                                     "BookmarkTitle: {}\n".format(title), 
                                     "BookmarkLevel: {}\n".format(level), 
