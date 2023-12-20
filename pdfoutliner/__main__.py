@@ -2,6 +2,7 @@
 import os
 import re
 import argparse
+from subprocess import run
 
 def main():
     parser = argparse.ArgumentParser()
@@ -148,8 +149,8 @@ def main():
         else:
             update_info = "update_info"
 
-        os.system("pdftk {} {} {} output {}".format(args.inpdf, 
-            update_info, marks_path, pdf_out_path))
+        run(["pdftk", args.inpdf, update_info, marks_path, "output", pdf_out_path],
+            check=True)
         # Delete intermediary bookmark file
         os.remove(marks_path)
 
